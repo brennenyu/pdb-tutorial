@@ -12,10 +12,13 @@ class GameRunner:
         self.wins = 0
         self.loses = 0
 
+    def reroll_dice(self):
+        self.dice = Die.create_dice(5)
+
     def answer(self):
         total = 0
         for die in self.dice:
-            total += 1
+            total += die.value
         return total
 
     @classmethod
@@ -23,11 +26,11 @@ class GameRunner:
         # Probably counts wins or something.
         # Great variable name, 10/10.
         c = 0
+        runner = cls()
         while True:
-            runner = cls()
-
             print("Round {}\n".format(runner.round))
-
+            
+            runner.reroll_dice()
             for die in runner.dice:
                 print(die.show())
 
@@ -51,10 +54,15 @@ class GameRunner:
                 print("You won... Congrats...")
                 print("The fact it took you so long is pretty sad")
                 break
+            
+            prompt = None
+            while prompt not in ("y", "n"):
+                prompt = input("Would you like to play again?[Y/n]: ")
+                prompt = prompt.lower()
 
-            prompt = input("Would you like to play again?[Y/n]: ")
-
-            if prompt == 'y' or prompt == '':
+            if prompt in ("y", ""):
                 continue
+            elif prompt in ("n"):
+                return
             else:
                 i_just_throw_an_exception()
